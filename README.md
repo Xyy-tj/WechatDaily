@@ -2,11 +2,48 @@
 
 [![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat&logo=python)](https://www.python.org/) [![FastAPI](https://img.shields.io/badge/FastAPI-0.95.0%2B-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/) [![Playwright](https://img.shields.io/badge/Playwright-1.30.0%2B-2EAD33?style=flat&logo=playwright)](https://playwright.dev/) [![OpenAI](https://img.shields.io/badge/OpenAI_API-GPT--4-412991?style=flat&logo=openai)](https://openai.com/) [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-这是微信群聊日报生成器的微服务架构版本，使用FastAPI框架实现，将HTML转图片功能分离为独立服务。系统能够自动分析微信群聊记录，生成结构化的日报，并提供HTML和图片格式的输出。
 
-<p align="center">
+<div align="center">
+<h3>这个项目是一个微信群聊日报生成器，但远不止于此</h3>
+</div>
+
+<table align="center">
+  <tr>
+    <td>
+      <h3 align="center">✨ 核心功能</h3>
+      <ul>
+        <li>🔍 识别群聊的 <b>关键决策</b> </b>（而不是99+"收到"）</li>
+        <li>🏆 标记群聊的 <b>"抽象整活哥"</b> 和 <b>"最佳贡献者"</b></li>
+        <li>📝 记录当天的 <b>"本群记忆和黑话烂梗"</b></li>
+        <li>📊 生成美观的日报，一目了然群聊精华</li>
+      </ul>
+    </td>
+    <td>
+      <h3 align="center">🛠️ 技术栈</h3>
+      <ul>
+        <li>⚡ 用 <b>FastAPI</b> 快速搭建高性能服务</li>
+        <li>🧠 <b>AI驱动</b> 自动过滤无效信息</li>
+        <li>🖼️ 输出支持HTML/图片格式</li>
+        <li>🔄 微服务架构，模块化设计</li>
+      </ul>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2">
+      <h3 align="center">💡 最适合</h3>
+      <div align="center">
+        <b>👨‍💻 每天被100+群消息轰炸的互联网打工人</b> &nbsp;|&nbsp;
+        <b>🕵️ 想看看群里谁在说"正确的废话"的好奇宝宝</b> &nbsp;|&nbsp;
+        <b>📋 需要写周报但不想看聊天记录的懒人</b> &nbsp;|&nbsp;
+        <b>👔 想要高效管理团队沟通的管理者</b>
+      </div>
+    </td>
+  </tr>
+</table>
+
+<!-- <div align="center">
   <img src="screenshots/banner.jpg" alt="项目横幅" width="800">
-</p>
+</div> -->
 
 ## 📋 目录
 
@@ -33,9 +70,6 @@
     - [首页](#首页)
     - [模板管理](#模板管理)
     - [生成结果](#生成结果)
-  - [贡献者](#贡献者)
-  - [许可证](#许可证)
-  - [致谢](#致谢)
 
 ## 🚀 项目特点
 
@@ -223,19 +257,79 @@ MEMOTrace开源地址：https://github.com/LC044/WeChatMsg
 ![示例1](screenshots/img1.jpg)
 ![示例2](screenshots/img2.jpg)
 
-## 贡献者
+<div align="center">
+  <h2>👨‍💻 贡献者</h2>
+</div>
 
-<a href="https://github.com/Xyy-tj">
-  <img src="https://github.com/Xyy-tj.png" width="50" height="50" alt="开发者头像">
-</a>
+<div align="center">
+  <a href="https://github.com/Xyy-tj">
+    <img src="https://github.com/Xyy-tj.png" width="70" height="70" alt="开发者头像" style="border-radius: 50%; margin: 0 10px;">
+  </a>
+  <!-- 可以添加更多贡献者 -->
+</div>
 
-## 许可证
+<div align="center">
+  <p>感谢所有为这个项目做出贡献的开发者！</p>
+  <p>欢迎提交 Pull Request 或创建 Issue 来帮助改进这个项目。</p>
+</div>
 
-本项目采用 [MIT 许可证](LICENSE)。
+<div align="center">
+  <h2>📄 许可证</h2>
+  <p>本项目采用 <a href="LICENSE">MIT 许可证</a>。</p>
+</div>
 
-## 致谢
+<div align="center">
+  <h2>🙏 致谢</h2>
+</div>
 
-- [FastAPI](https://fastapi.tiangolo.com/) - 高性能的Python Web框架
-- [Playwright](https://playwright.dev/) - 现代化的Web测试和自动化库
-- [OpenAI API](https://openai.com/) - 强大的AI语言模型
-- [Jinja2](https://jinja.palletsprojects.com/) - 现代化的Python模板引擎
+<div align="center">
+  <table>
+    <tr>
+      <td align="center">
+        <a href="https://fastapi.tiangolo.com/">
+          <img src="https://fastapi.tiangolo.com/img/logo-margin/logo-teal.png" width="100" alt="FastAPI">
+          <br>
+          <b>FastAPI</b>
+          <br>
+          <sub>高性能的Python Web框架</sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://playwright.dev/">
+          <img src="https://playwright.dev/img/playwright-logo.svg" width="100" alt="Playwright">
+          <br>
+          <b>Playwright</b>
+          <br>
+          <sub>现代化的Web测试和自动化库</sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://openai.com/">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/4d/OpenAI_Logo.svg/1024px-OpenAI_Logo.svg.png" width="100" alt="OpenAI">
+          <br>
+          <b>OpenAI API</b>
+          <br>
+          <sub>强大的AI语言模型</sub>
+        </a>
+      </td>
+      <td align="center">
+        <a href="https://jinja.palletsprojects.com/">
+          <img src="https://jinja.palletsprojects.com/en/3.1.x/_images/jinja-logo.png" width="100" alt="Jinja2">
+          <br>
+          <b>Jinja2</b>
+          <br>
+          <sub>现代化的Python模板引擎</sub>
+        </a>
+      </td>
+    </tr>
+  </table>
+</div>
+
+<div align="center">
+  <br>
+  <p>
+    <sub>
+      Made with ❤️ by developers for developers
+    </sub>
+  </p>
+</div>
