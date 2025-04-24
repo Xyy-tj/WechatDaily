@@ -1,0 +1,13 @@
+python-dotenv
+selenium
+webdriver-manager
+playwright
+flask
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+openai
+requests
+jinja2
+python-multipart

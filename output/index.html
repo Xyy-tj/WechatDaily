@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>群聊日报 - 2025-04-23</title>
+    <style>
+        :root {
+            --bg-primary: #0f0e17;
+            --bg-secondary: #1a1925;
+            --bg-tertiary: #252336;
+            --text-primary: #fffffe;
+            --text-secondary: #a7a9be;
+            --accent-primary: #ff8906;
+            --accent-secondary: #f25f4c;
+            --accent-tertiary: #e53170;
+            --accent-blue: #3da9fc;
+            --accent-purple: #9d4edd; /* Adjusted purple for better contrast */
+            --accent-cyan: #00b4d8;
+            --border-color: #302e4d; /* Define a border color */
+        }
+
+        body {
+            font-family: "SF Pro Display", "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            font-size: 16px;
+            max-width: 1200px; /* Use max-width for responsiveness */
+            margin: 20px auto; /* Center body with margin */
+            padding: 20px;
+        }
+
+        .report-container {
+            background-color: var(--bg-secondary);
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+            margin-top: 20px;
+        }
+
+        .report-header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 25px;
+        }
+
+        .report-header h1 {
+            color: var(--accent-primary);
+            font-size: 2.8em;
+            margin-bottom: 10px;
+            font-weight: 700;
+            letter-spacing: 1px;
+        }
+
+        .report-header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.2em;
+            margin-bottom: 5px;
+        }
+
+        .report-header .time-range {
+            color: var(--accent-cyan);
+            font-size: 1em;
+            font-style: italic;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin-bottom: 35px;
+            padding: 20px;
+            background-color: var(--bg-tertiary);
+            border-radius: 8px;
+        }
+
+        .stat-item {
+            background-color: var(--bg-secondary);
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .stat-item:hover {
+             transform: translateY(-3px);
+             box-shadow: 0 4px 10px rgba(0,0,0, 0.3);
+        }
+
+        .stat-item .label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            margin-bottom: 8px;
+        }
+
+        .stat-item .value {
+            display: block;
+            color: var(--accent-cyan);
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        .report-section {
+            background-color: var(--bg-primary); /* Slightly different bg for sections */
+            padding: 25px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            /* border-left: 5px solid var(--accent-blue); */
+        }
+
+        .report-section h2 {
+            color: var(--accent-primary);
+            font-size: 1.9em;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-blue);
+            font-weight: 600;
+            display: inline-block; /* Make border only underline text */
+        }
+
+        ul, ol {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li {
+            background-color: var(--bg-secondary);
+            margin-bottom: 12px;
+            padding: 15px 18px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            transition: background-color 0.3s ease, border-color 0.3s ease;
+            position: relative; /* For potential pseudo-elements */
+            overflow: hidden; /* Ensure content fits */
+        }
+
+        li::before { /* Subtle accent line */
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background-color: var(--accent-purple);
+            opacity: 0.6;
+            transition: opacity 0.3s ease;
+        }
+
+        li:hover {
+            background-color: var(--bg-tertiary);
+            border-color: var(--accent-purple);
+        }
+         li:hover::before {
+             opacity: 1;
+         }
+
+        li strong { /* Highlight keywords or names */
+            color: var(--accent-secondary);
+            font-weight: 600;
+        }
+
+        .talkative-list ol {
+            padding-left: 0; /* Reset padding for ol */
+            list-style: none; /* Remove default numbering */
+            counter-reset: talkative-counter; /* Initialize counter */
+        }
+
+        .talkative-list li {
+            background-color: transparent;
+            border: none;
+            padding: 8px 0 8px 45px; /* Add padding for custom number */
+            margin-bottom: 8px;
+            position: relative;
+            border-bottom: 1px dashed var(--border-color);
+            min-height: 30px; /* Ensure consistent height */
+        }
+         .talkative-list li::before { /* Custom counter style */
+            content: counter(talkative-counter);
+            counter-increment: talkative-counter;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: var(--accent-tertiary);
+            color: var(--text-primary);
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9em;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .talkative-list li:nth-child(1)::before { background-color: #FFD700; color: #333; } /* Gold */
+        .talkative-list li:nth-child(2)::before { background-color: #C0C0C0; color: #333; } /* Silver */
+        .talkative-list li:nth-child(3)::before { background-color: #CD7F32; color: #fff; } /* Bronze */
+
+
+        .talkative-list .nickname {
+            font-weight: bold;
+            color: var(--accent-cyan);
+            font-size: 1.1em;
+        }
+
+        .talkative-list .message-count {
+            font-style: normal;
+            color: var(--text-secondary);
+            font-size: 0.95em;
+            margin-left: 10px;
+        }
+        .talkative-list .message-count::before {
+            content: "(";
+            margin-right: 2px;
+        }
+        .talkative-list .message-count::after {
+            content: "条)";
+            margin-left: 2px;
+        }
+
+
+        .word-cloud-container {
+             padding: 20px;
+             background-color: var(--bg-secondary);
+             border-radius: 8px;
+             text-align: center;
+             border: 1px solid var(--border-color);
+             margin-top: 15px;
+        }
+
+        .word-cloud-container span {
+            display: inline-block;
+            margin: 6px 9px;
+            padding: 5px 12px;
+            border-radius: 15px; /* Pill shape */
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-tertiary));
+            color: var(--text-primary);
+            font-size: 1.05em; /* Example sizing */
+            opacity: 0.9;
+            transition: all 0.3s ease;
+            cursor: default;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+         .word-cloud-container span:hover {
+            opacity: 1;
+            transform: scale(1.08);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+         }
+
+        .quote-item {
+            font-style: italic;
+            color: var(--text-secondary);
+            border-left: 4px solid var(--accent-tertiary);
+            padding: 12px 15px 12px 20px;
+            margin-bottom: 15px !important;
+            background-color: var(--bg-tertiary) !important; /* Slightly different bg for quotes */
+            border-radius: 4px !important;
+            position: relative;
+        }
+        .quote-item::before { /* Remove default li accent */
+             display: none;
+        }
+
+        .quote-item .quoter {
+            display: block;
+            text-align: right;
+            font-style: normal;
+            color: var(--accent-primary);
+            font-size: 0.9em;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+        .quote-item .quoter::before {
+            content: "—— ";
+        }
+
+        a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: color 0.3s ease, text-decoration 0.3s ease;
+        }
+        a:hover {
+            color: var(--accent-primary);
+            text-decoration: underline;
+        }
+
+        .message-type-tag {
+            display: inline-block;
+            background-color: var(--accent-blue);
+            color: var(--text-primary);
+            font-size: 0.8em;
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-left: 8px;
+            font-weight: bold;
+        }
+        .tag-image { background-color: var(--accent-cyan); }
+        .tag-video { background-color: var(--accent-tertiary); }
+        .tag-link { background-color: var(--accent-purple); }
+        .tag-system { background-color: var(--text-secondary); color: var(--bg-primary); }
+        .tag-quote { background-color: var(--accent-secondary); }
+        .tag-location { background-color: #4CAF50; } /* Green for location */
+        .tag-forward { background-color: #FF9800; } /* Orange for forwarded */
+
+    </style>
+</head>
+<body>
+
+    <div class="report-container">
+        <div class="report-header">
+            <h1>群聊 日报</h1>
+            <p class="subtitle">日期: 2025-04-23</p>
+            <p class="time-range">覆盖时间: 2025-04-01 10:36:56 至 2025-04-23 23:34:24</p>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-item">
+                <span class="label">总消息数</span>
+                <span class="value">154</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">活跃成员</span>
+                <span class="value">9</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">图片分享</span>
+                <span class="value">22</span>
+            </div>
+            <div class="stat-item">
+                <span class="label">视频/链接</span>
+                <span class="value">3</span>
+            </div>
+             <div class="stat-item">
+                <span class="label">成员变动</span>
+                <span class="value">-1</span>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h2>今日讨论热点</h2>
+            <ul>
+                <li><strong>生活与投资杂谈:</strong> 分享投资经历（<strong>小米股票</strong>）、线下约饭计划（上海/杭州/绍兴）、讨论B站视频（外卖小哥吹牛）、技术八卦（<strong>大 模型</strong> 应用、同济获奖）以及成员间的日常互动。</li>
+            </ul>
+        </div>
+
+        <div class="report-section">
+            <h2>重要消息汇总</h2>
+            <ul>
+                <li><code>2025-04-17</code>: 讨论次日（周四晚）聚餐计划，提及 <strong>行弟儿</strong> 周六将前往深圳。</li>
+                <li><code>2025-04-19</code>: <strong>穆罕默德</strong> 分享同济大学团队获日内瓦发明展金奖+特别奖链接。<span class="message-type-tag tag-link">链接</span></li>
+            </ul>
+        </div>
+
+        <div class="report-section talkative-list">
+            <h2>话唠榜 Top 5</h2>
+            <ol>
+                <li><span class="nickname">张三</span> <span class="message-count">38</span></li>
+                <li><span class="nickname">李四</span> <span class="message-count">30</span></li>
+                <li><span class="nickname">王五</span> <span class="message-count">24</span></li>
+            </ol>
+        </div>
+
+         <div class="report-section">
+            <h2>趣味吐槽精选</h2>
+            <ul>
+                 <li class="quote-item">
+                    (关于面试9年经验者) 看起来简单实则一点也不复杂
+                    <span class="quoter">肖哥</span>
+                </li>
+                <li class="quote-item">
+                    我逐渐能理解老板了...当别人给你发一大段内容的时候，你真的很想回一个 “好的”
+                    <span class="quoter">刘嘉琦</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="report-section">
+            <h2>高频词云</h2>
+            <div class="word-cloud-container">
+                <span>面试</span> <span>杭州</span> <span>上海</span>
+                <span>清华</span> <span>图片</span> <span>工作</span> <span>offer</span>
+            </div>
+        </div>
+
+        <div class="report-section">
+            <h2>群内动态 & 媒体统计</h2>
+             <ul>
+                <li><strong>活跃时段:</strong> 群内讨论在整个时间段内均有分布，但晚间（尤其 <strong>19:00 - 23:00</strong>）和部分午后时段（如 <strong>14:00-15:00</strong>）讨论 热度较高。</li>
+                <li><strong>媒体分享:</strong>
+                    共分享 <strong>22</strong> 张图片<span class="message-type-tag tag-image">图片</span>，
+                    <strong>2</strong> 个视频<span class="message-type-tag tag-video">视频</span>，
+                    <strong>1</strong> 个外部链接<span class="message-type-tag tag-link">链接</span>，
+                    <strong>1</strong> 次位置分享<span class="message-type-tag tag-location">位置</span>，
+                    以及 <strong>3</strong> 次合并转发<span class="message-type-tag tag-forward">转发</span>。
+                </li>
+                <li><strong>表情使用:</strong> 群友们使用了 `[惊恐]`, `[破涕为笑]`, `[捂脸]`, `[苦涩]`, `[阴险]` 等文字表情来表达情绪。</li>
+                 <li><strong>成员变动:</strong> 有 <strong>1</strong> 位成员退出群聊。<span class="message-type-tag tag-system">系统</span></li>
+            </ul>
+        </div>
+
+    </div>
+
+</body>
+</html>

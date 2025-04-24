@@ -1,0 +1,411 @@
+{% extends "base.html" %}
+
+{% block title %}模板管理 - 微信群聊日报生成器{% endblock %}
+
+{% block content %}
+<div class="row mt-3">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header">
+                模板管理
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <h4>可用模板</h4>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>模板名称</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="templates-list">
+                                <tr>
+                                    <td colspan="2">加载中...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="mt-4">
+                    <h4>创建新模板</h4>
+                    <form id="create-template-form">
+                        <div class="form-group">
+                            <label for="template-name" class="form-label">模板名称</label>
+                            <input type="text" id="template-name" name="template_name" class="form-control" placeholder="例如: my_template.txt" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="template-content" class="form-label">模板内容</label>
+                            <textarea id="template-content" name="template_content" class="form-control form-textarea" placeholder="输入模板内容..." required></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary">创建模板</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 模板编辑模态框 -->
+<div id="edit-template-modal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h4>编辑模板</h4>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <form id="edit-template-form">
+                <input type="hidden" id="edit-template-name" name="template_name">
+                
+                <div class="form-group">
+                    <label for="edit-template-content" class="form-label">模板内容</label>
+                    <textarea id="edit-template-content" name="template_content" class="form-control form-textarea" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">保存更改</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* 模态框样式 */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1050;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.4);
+    }
+
+    .modal-content {
+        background-color: #fefefe;
+        margin: 10% auto;
+        padding: 0;
+        border: 1px solid #888;
+        width: 80%;
+        max-width: 700px;
+        border-radius: var(--border-radius);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .modal-header {
+        padding: 15px 20px;
+        background-color: #f8f9fa;
+        border-bottom: 1px solid #e9ecef;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .modal-body {
+        padding: 20px;
+    }
+
+    .close {
+        color: #aaa;
+        font-size: 28px;
+        font-weight: bold;
+        cursor: pointer;
+    }
+
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+    }
+</style>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 获取DOM元素
+        const templatesList = document.getElementById('templates-list');
+        const createTemplateForm = document.getElementById('create-template-form');
+        const editTemplateForm = document.getElementById('edit-template-form');
+        const editTemplateModal = document.getElementById('edit-template-modal');
+        const closeModalBtn = document.querySelector('.close');
+        const alertContainer = document.getElementById('alert-container');
+        const loadingContainer = document.getElementById('loading-container');
+        
+        // 加载模板列表
+        loadTemplates();
+        
+        // 创建模板表单提交
+        if (createTemplateForm) {
+            createTemplateForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                createTemplate();
+            });
+        }
+        
+        // 编辑模板表单提交
+        if (editTemplateForm) {
+            editTemplateForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                updateTemplate();
+            });
+        }
+        
+        // 关闭模态框
+        if (closeModalBtn) {
+            closeModalBtn.addEventListener('click', function() {
+                editTemplateModal.style.display = 'none';
+            });
+        }
+        
+        // 点击模态框外部关闭
+        window.addEventListener('click', function(e) {
+            if (e.target === editTemplateModal) {
+                editTemplateModal.style.display = 'none';
+            }
+        });
+        
+        // 加载模板列表
+        function loadTemplates() {
+            fetch('/api/templates')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('获取模板列表失败');
+                    }
+                    return response.json();
+                })
+                .then(templates => {
+                    // 清空现有内容
+                    templatesList.innerHTML = '';
+                    
+                    if (templates.length === 0) {
+                        templatesList.innerHTML = '<tr><td colspan="2">没有可用的模板</td></tr>';
+                        return;
+                    }
+                    
+                    // 添加模板行
+                    templates.forEach(template => {
+                        const row = document.createElement('tr');
+                        row.innerHTML = `
+                            <td>${template}</td>
+                            <td>
+                                <button class="btn btn-sm btn-primary edit-btn" data-template="${template}">编辑</button>
+                                <button class="btn btn-sm btn-danger delete-btn" data-template="${template}">删除</button>
+                            </td>
+                        `;
+                        templatesList.appendChild(row);
+                    });
+                    
+                    // 添加编辑按钮事件
+                    document.querySelectorAll('.edit-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const templateName = this.getAttribute('data-template');
+                            openEditModal(templateName);
+                        });
+                    });
+                    
+                    // 添加删除按钮事件
+                    document.querySelectorAll('.delete-btn').forEach(btn => {
+                        btn.addEventListener('click', function() {
+                            const templateName = this.getAttribute('data-template');
+                            if (confirm(`确定要删除模板 "${templateName}" 吗？`)) {
+                                deleteTemplate(templateName);
+                            }
+                        });
+                    });
+                })
+                .catch(error => {
+                    showAlert('danger', '加载模板列表失败: ' + error.message);
+                });
+        }
+        
+        // 创建新模板
+        function createTemplate() {
+            // 获取表单数据
+            const templateName = document.getElementById('template-name').value;
+            const templateContent = document.getElementById('template-content').value;
+            
+            // 显示加载动画
+            loadingContainer.style.display = 'flex';
+            
+            // 发送请求
+            fetch('/api/template', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    template_name: templateName,
+                    template_content: templateContent
+                })
+            })
+            .then(response => {
+                loadingContainer.style.display = 'none';
+                
+                if (!response.ok) {
+                    throw new Error('创建模板失败');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // 重置表单
+                    createTemplateForm.reset();
+                    
+                    // 重新加载模板列表
+                    loadTemplates();
+                    
+                    // 显示成功消息
+                    showAlert('success', '模板创建成功！');
+                } else {
+                    showAlert('danger', '创建模板失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                loadingContainer.style.display = 'none';
+                showAlert('danger', '创建模板时出错: ' + error.message);
+            });
+        }
+        
+        // 打开编辑模态框
+        function openEditModal(templateName) {
+            // 显示加载动画
+            loadingContainer.style.display = 'flex';
+            
+            // 获取模板内容
+            fetch(`/api/template/${templateName}`)
+                .then(response => {
+                    loadingContainer.style.display = 'none';
+                    
+                    if (!response.ok) {
+                        throw new Error('获取模板内容失败');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 填充表单
+                    document.getElementById('edit-template-name').value = templateName;
+                    document.getElementById('edit-template-content').value = data.content;
+                    
+                    // 显示模态框
+                    editTemplateModal.style.display = 'block';
+                })
+                .catch(error => {
+                    loadingContainer.style.display = 'none';
+                    showAlert('danger', '获取模板内容失败: ' + error.message);
+                });
+        }
+        
+        // 更新模板
+        function updateTemplate() {
+            // 获取表单数据
+            const templateName = document.getElementById('edit-template-name').value;
+            const templateContent = document.getElementById('edit-template-content').value;
+            
+            // 显示加载动画
+            loadingContainer.style.display = 'flex';
+            
+            // 发送请求
+            fetch(`/api/template/${templateName}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    template_content: templateContent
+                })
+            })
+            .then(response => {
+                loadingContainer.style.display = 'none';
+                
+                if (!response.ok) {
+                    throw new Error('更新模板失败');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // 关闭模态框
+                    editTemplateModal.style.display = 'none';
+                    
+                    // 显示成功消息
+                    showAlert('success', '模板更新成功！');
+                } else {
+                    showAlert('danger', '更新模板失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                loadingContainer.style.display = 'none';
+                showAlert('danger', '更新模板时出错: ' + error.message);
+            });
+        }
+        
+        // 删除模板
+        function deleteTemplate(templateName) {
+            // 显示加载动画
+            loadingContainer.style.display = 'flex';
+            
+            // 发送请求
+            fetch(`/api/template/${templateName}`, {
+                method: 'DELETE'
+            })
+            .then(response => {
+                loadingContainer.style.display = 'none';
+                
+                if (!response.ok) {
+                    throw new Error('删除模板失败');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    // 重新加载模板列表
+                    loadTemplates();
+                    
+                    // 显示成功消息
+                    showAlert('success', '模板删除成功！');
+                } else {
+                    showAlert('danger', '删除模板失败: ' + data.message);
+                }
+            })
+            .catch(error => {
+                loadingContainer.style.display = 'none';
+                showAlert('danger', '删除模板时出错: ' + error.message);
+            });
+        }
+        
+        // 显示提示消息
+        function showAlert(type, message) {
+            // 创建提示元素
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type}`;
+            alert.textContent = message;
+            
+            // 清空现有提示
+            alertContainer.innerHTML = '';
+            
+            // 添加新提示
+            alertContainer.appendChild(alert);
+            
+            // 5秒后自动隐藏
+            setTimeout(() => {
+                alert.style.opacity = '0';
+                setTimeout(() => {
+                    alertContainer.removeChild(alert);
+                }, 500);
+            }, 5000);
+        }
+    });
+</script>
+{% endblock %}
