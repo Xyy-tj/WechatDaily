@@ -19,16 +19,15 @@
   - [服务组件](#服务组件)
   - [安装依赖](#安装依赖)
   - [启动服务](#启动服务)
-    - [方式一：使用启动脚本（推荐）](#方式一使用启动脚本推荐)
-    - [方式二：分别启动各服务](#方式二分别启动各服务)
+    - [1. 填好env文件](#1-填好env文件)
+    - [2. 使用启动脚本](#2-使用启动脚本)
+    - [3. 打开浏览器访问](#3-打开浏览器访问)
   - [API接口](#api接口)
     - [主应用服务](#主应用服务)
     - [HTML转图片服务](#html转图片服务)
   - [使用方式](#使用方式)
     - [通过Web界面使用](#通过web界面使用)
-    - [通过API使用](#通过api使用)
-    - [直接转换HTML为图片](#直接转换html为图片)
-  - [环境变量](#环境变量)
+    - [关于wechat聊天记录如何导出](#关于wechat聊天记录如何导出)
   - [注意事项](#注意事项)
   - [截图](#截图)
     - [首页](#首页)
@@ -131,32 +130,30 @@ playwright install  # 安装Playwright浏览器
 ```
 
 ## 启动服务
+### 1. 填好env文件
+在文件夹内复制.env.example 为 .env，填入你的openai api key，但是此处模型默认使用gemini-2.5-pro-exp-03-25
 
-### 方式一：使用启动脚本（推荐）
+环境变量目前包括：
+- `OPENAI_API_KEY` - OpenAI API密钥
+- `OPENAI_BASE_URL` - OpenAI API基础URL（可选）
+
+```bash
+# linux环境下bash
+cp .env.example .env
+# windows环境下cmd
+copy .env.example .env
+```
+
+
+### 2. 使用启动脚本
 
 ```bash
 python start_services.py
 ```
+### 3. 打开浏览器访问
+http://localhost:8000/
 
-启用调试模式：
 
-```bash
-python start_services.py --debug
-```
-
-### 方式二：分别启动各服务
-
-启动HTML转图片服务：
-
-```bash
-python html_to_image_service_fastapi.py
-```
-
-启动主应用服务：
-
-```bash
-python app_soa.py
-```
 
 ## API接口
 
@@ -185,89 +182,26 @@ python app_soa.py
 2. 在首页可以上传聊天记录文件，选择模板，生成日报
 3. 在模板管理页面可以查看、创建、编辑和删除模板
 
-### 通过API使用
 
-```python
-import requests
-import json
+### 关于wechat聊天记录如何导出
 
-# 读取聊天记录
-with open("chat.txt", "r", encoding="utf-8") as f:
-    chat_content = f.read()
+建议使用MEMOTrace（留痕）软件进行群记录导出，一般的组织形式如![示例2](screenshots/群聊名称.txt)为：
 
-# 请求生成日报
-response = requests.post(
-    "http://localhost:8000/api/daily-report",
-    json={
-        "chat_content": chat_content,
-        "template_name": "default_template.txt",
-        "convert_to_image": True
-    }
-)
+MEMOTrace开源地址：https://github.com/LC044/WeChatMsg
 
-# 处理响应
-if response.status_code == 200:
-    result = response.json()
-    if result["success"]:
-        print(f"日报生成成功")
-        print(f"HTML文件路径: {result['html_file_path']}")
-        print(f"PNG图片路径: {result['png_file_path']}")
-    else:
-        print(f"日报生成失败: {result['message']}")
-else:
-    print(f"请求失败: {response.status_code}, {response.text}")
+```
+2025-04-23 13:13:45 张三
+为什么不给我打码
+2025-04-23 13:13:51 李四
+我要发声
+2025-04-23 13:15:58 张三
+哦忘了
+2025-04-23 13:20:21 王五
+怎么都这么厉害呢
 ```
 
-### 直接转换HTML为图片
 
-```python
-import requests
 
-# HTML内容
-html_content = """
-<!DOCTYPE html>
-<html>
-<head>
-    <title>测试页面</title>
-</head>
-<body>
-    <h1>Hello World</h1>
-    <p>这是一个测试页面</p>
-</body>
-</html>
-"""
-
-# 请求转换
-response = requests.post(
-    "http://localhost:8001/convert",
-    json={
-        "html": html_content,
-        "options": {
-            "viewport_width": 1200,
-            "viewport_height": 800,
-            "scale_factor": 1.5
-        }
-    }
-)
-
-# 处理响应
-if response.status_code == 200:
-    result = response.json()
-    if result["success"]:
-        print(f"HTML转换成功，图片路径: {result['image_path']}")
-    else:
-        print(f"HTML转换失败: {result['error']}")
-else:
-    print(f"请求失败: {response.status_code}, {response.text}")
-```
-
-## 环境变量
-
-- `OPENAI_API_KEY` - OpenAI API密钥
-- `OPENAI_BASE_URL` - OpenAI API基础URL（可选）
-- `OUTPUT_DIR` - 输出目录（默认为"output"）
-- `IMAGE_DIR` - 图片保存目录（默认为"output/images"）
-- `HTML_DIR` - HTML文件保存目录（默认为"output/html_files"）
 
 ## 注意事项
 
@@ -291,8 +225,8 @@ else:
 
 ## 贡献者
 
-<a href="https://github.com/yourusername">
-  <img src="https://github.com/yourusername.png" width="50" height="50" alt="开发者头像">
+<a href="https://github.com/Xyy-tj">
+  <img src="https://github.com/Xyy-tj.png" width="50" height="50" alt="开发者头像">
 </a>
 
 ## 许可证
