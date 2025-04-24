@@ -294,6 +294,11 @@ async def index(request: Request):
     """首页"""
     return templates.TemplateResponse("index.html", {"request": request})
 
+@app.get("/favicon.ico", include_in_schema=False)
+async def favicon():
+    """网站图标"""
+    return FileResponse("app/static/favicon.ico")
+
 @app.get("/templates", tags=["Web界面"])
 async def templates_page(request: Request):
     """模板管理页面"""
