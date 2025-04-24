@@ -1,6 +1,81 @@
 # 微信群聊日报生成器 - 微服务架构版本
 
-这是微信群聊日报生成器的微服务架构版本，使用FastAPI框架实现，将HTML转图片功能分离为独立服务。
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue?style=flat&logo=python)](https://www.python.org/) [![FastAPI](https://img.shields.io/badge/FastAPI-0.95.0%2B-009688?style=flat&logo=fastapi)](https://fastapi.tiangolo.com/) [![Playwright](https://img.shields.io/badge/Playwright-1.30.0%2B-2EAD33?style=flat&logo=playwright)](https://playwright.dev/) [![OpenAI](https://img.shields.io/badge/OpenAI_API-GPT--4-412991?style=flat&logo=openai)](https://openai.com/) [![License](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
+这是微信群聊日报生成器的微服务架构版本，使用FastAPI框架实现，将HTML转图片功能分离为独立服务。系统能够自动分析微信群聊记录，生成结构化的日报，并提供HTML和图片格式的输出。
+
+<p align="center">
+  <img src="screenshots/banner.jpg" alt="项目横幅" width="800">
+</p>
+
+## 📋 目录
+
+- [微信群聊日报生成器 - 微服务架构版本](#微信群聊日报生成器---微服务架构版本)
+  - [📋 目录](#-目录)
+  - [🚀 项目特点](#-项目特点)
+  - [🏁 快速开始](#-快速开始)
+  - [项目结构](#项目结构)
+  - [功能特点](#功能特点)
+  - [服务组件](#服务组件)
+  - [安装依赖](#安装依赖)
+  - [启动服务](#启动服务)
+    - [方式一：使用启动脚本（推荐）](#方式一使用启动脚本推荐)
+    - [方式二：分别启动各服务](#方式二分别启动各服务)
+  - [API接口](#api接口)
+    - [主应用服务](#主应用服务)
+    - [HTML转图片服务](#html转图片服务)
+  - [使用方式](#使用方式)
+    - [通过Web界面使用](#通过web界面使用)
+    - [通过API使用](#通过api使用)
+    - [直接转换HTML为图片](#直接转换html为图片)
+  - [环境变量](#环境变量)
+  - [注意事项](#注意事项)
+  - [截图](#截图)
+    - [首页](#首页)
+    - [模板管理](#模板管理)
+    - [生成结果](#生成结果)
+  - [贡献者](#贡献者)
+  - [许可证](#许可证)
+  - [致谢](#致谢)
+
+## 🚀 项目特点
+
+- **🤖 AI驱动**：利用OpenAI的GPT模型分析聊天记录，提取关键信息
+- **🌐 微服务架构**：模块化设计，服务间松耦合，易于扩展
+- **⚡ 高性能**：基于FastAPI的异步处理，响应迅速
+- **🎨 美观输出**：生成结构化、美观的HTML和图片格式日报
+- **🔧 易于使用**：提供Web界面和API接口，满足不同用户需求
+- **📱 移动友好**：生成的日报适合在手机上查看和分享
+
+## 🏁 快速开始
+
+1. 克隆仓库
+   ```bash
+   git clone https://github.com/yourusername/WechatDaily.git
+   cd WechatDaily
+   ```
+
+2. 安装依赖
+   ```bash
+   pip install -r requirements.txt
+   playwright install
+   ```
+
+3. 设置环境变量
+   ```bash
+   # Linux/macOS
+   export OPENAI_API_KEY=your_api_key
+
+   # Windows
+   set OPENAI_API_KEY=your_api_key
+   ```
+
+4. 启动服务
+   ```bash
+   python start_services.py
+   ```
+
+5. 打开浏览器访问 http://localhost:8000
 
 ## 项目结构
 
@@ -213,3 +288,20 @@ else:
 ### 生成结果
 ![示例1](screenshots/img1.jpg)
 ![示例2](screenshots/img2.jpg)
+
+## 贡献者
+
+<a href="https://github.com/yourusername">
+  <img src="https://github.com/yourusername.png" width="50" height="50" alt="开发者头像">
+</a>
+
+## 许可证
+
+本项目采用 [MIT 许可证](LICENSE)。
+
+## 致谢
+
+- [FastAPI](https://fastapi.tiangolo.com/) - 高性能的Python Web框架
+- [Playwright](https://playwright.dev/) - 现代化的Web测试和自动化库
+- [OpenAI API](https://openai.com/) - 强大的AI语言模型
+- [Jinja2](https://jinja.palletsprojects.com/) - 现代化的Python模板引擎
