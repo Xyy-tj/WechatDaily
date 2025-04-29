@@ -110,6 +110,11 @@
 
 5. 打开浏览器访问 http://localhost:8000
 
+
+## Wechat聊天记录相关项目
+微信记录导出可以参考MemoTrace项目（官方已删库），也可以考虑用基于MemoTrace二开的一个小工具项目：https://github.com/Xyy-tj/WeChatMsg
+
+
 ## 项目结构
 
 ```
